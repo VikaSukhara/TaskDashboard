@@ -5,6 +5,10 @@
   /* text-align: center; */
 }
 
+body {
+  transition: background-color 0.7s ease, color 0.5s ease;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

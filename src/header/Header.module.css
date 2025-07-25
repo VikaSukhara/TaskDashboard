@@ -1,0 +1,30 @@
+.btnTheme {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  position: relative;
+}
+
+:global(.dark) .btnTheme:hover {
+  background-color: #374151;
+}
+
+.btnTheme:hover {
+  background-color: #e5e7eb;
+}
+
+.btnTheme:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.sunIcon {
+  color: white;
+}
