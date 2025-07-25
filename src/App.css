@@ -1,12 +1,12 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   /* text-align: center; */
 }
 
 body {
   transition: background-color 0.7s ease, color 0.5s ease;
+  
 }
 
 .logo {
