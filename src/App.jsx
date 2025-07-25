@@ -20,7 +20,6 @@ function App() {
 
   return (
     <div>
-      <h1>Task Dashboard</h1>
       <Header changeTheme={setIsDark} isDark={isDark} />
     </div>
   );
