@@ -1,8 +1,16 @@
 import { Sun, Moon, Bell } from "lucide-react";
 
 import styles from "./Header.module.css";
+import { useState } from "react";
+import Modal from "../Modal/Modal";
 
 export default function Header({ changeTheme, isDark }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    console.log("togglw")
+    setIsModalOpen(!isModalOpen);
+  };
   return (
     <div className={styles.headerWrapper}>
       <h1 className={styles.headerTitle}>Task Dashboard</h1>
@@ -21,8 +29,15 @@ export default function Header({ changeTheme, isDark }) {
           <option>English</option>
           <option>Ukraine</option>
         </select>
-        <button className={styles.btnTask}>Create New Task</button>
+        <button className={styles.btnTask} onClick={toggleModal}>
+          Create New Task
+        </button>
       </div>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={toggleModal} width="512px">
+          <p>Here will be content!</p>
+        </Modal>
+      )}
     </div>
   );
 }
