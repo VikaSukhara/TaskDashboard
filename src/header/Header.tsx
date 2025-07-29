@@ -3,18 +3,57 @@ import { Sun, Moon, Bell } from "lucide-react";
 import styles from "./Header.module.css";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
+import TaskCreation from "../TaskCreation/TaskCreation";
 
-export default function Header({ changeTheme, isDark }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+type dataType = {
+  title: string;
+  description: string;
+  date: string;
+  priority: "medium" | "large" | "high";
+  assigned: string;
+};
+
+type HeaderProps = {
+  changeTheme: React.Dispatch<React.SetStateAction<boolean>>;
+  isDark: boolean;
+};
+
+export default function Header({ changeTheme, isDark }: HeaderProps) {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(1);
+  const [dataFromFrom, setDataFromFrom] = useState<dataType>({
+    title: "",
+    description: "",
+    date: "",
+    priority: "medium",
+    assigned: "",
+  });
 
   const toggleModal = () => {
-    console.log("togglw")
+    if (!isModalOpen) {
+      setStep(1);
+      setDataFromFrom({
+        title: "",
+        description: "",
+        date: "",
+        priority: "medium",
+        assigned: "",
+      });
+    }
+
     setIsModalOpen(!isModalOpen);
   };
+
+  const handleSubmit = () => {
+    console.log("Submitted data:", dataFromFrom);
+    setIsModalOpen(false);
+    setStep(1);
+  };
+
   return (
     <div className={styles.headerWrapper}>
       <h1 className={styles.headerTitle}>Task Dashboard</h1>
-      <div className={styles.btnWrapper}>
+      <div className={styles.btnNavWrapper}>
         {" "}
         <button
           className={styles.btnTheme}
@@ -35,7 +74,14 @@ export default function Header({ changeTheme, isDark }) {
       </div>
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={toggleModal} width="512px">
-          <p>Here will be content!</p>
+          <TaskCreation
+            step={step}
+            setStep={setStep}
+            data={dataFromFrom}
+            setData={setDataFromFrom}
+            onSubmit={handleSubmit}
+            onClose={toggleModal}
+          />
         </Modal>
       )}
     </div>
