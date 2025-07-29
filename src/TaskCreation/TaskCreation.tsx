@@ -16,6 +16,8 @@ type Props = {
   onSubmit: () => void;
   onClose: () => void;
   step: number;
+  errors: Record<string, string>;
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 };
 
 export default function TaskCreation({
@@ -25,7 +27,31 @@ export default function TaskCreation({
   onSubmit,
   onClose,
   setStep,
+  errors,
+  setErrors,
 }: Props) {
+  console.log("errors", errors);
+
+  const validateStepOne = () => {
+    const newErrors: Record<string, string> = {};
+    if (!data.title.trim()) {
+      newErrors.title = "Title is required";
+    }
+
+    return newErrors;
+  };
+
+  const handleNext = () => {
+    const stepOneErrors = validateStepOne();
+
+    if (Object.keys(stepOneErrors).length === 0) {
+      setErrors({});
+      setStep((prev) => prev + 1);
+    } else {
+      setErrors(stepOneErrors);
+    }
+  };
+
   return (
     <div style={{ padding: "24px" }}>
       <h2 className={styles.modalTitle}>Create New Task</h2>
@@ -52,14 +78,26 @@ export default function TaskCreation({
                 type="text"
                 className={styles.inputModal}
                 value={data.title}
-                onChange={(e) => setData({ ...data, title: e.target.value })}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setData({ ...data, title: value });
+
+                  if (errors.title && value.trim().length >= 0) {
+                    setErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.title;
+                      return newErrors;
+                    });
+                  }
+                }}
               />
+              {errors.title && <p className={styles.error}>{errors.title}</p>}
             </label>
             <div className={styles.btNextModal}>
               <button
                 className={styles.btnModal}
                 type="button"
-                onClick={() => setStep((prev) => prev + 1)}
+                onClick={handleNext}
               >
                 Next
               </button>
@@ -75,10 +113,22 @@ export default function TaskCreation({
                 className={styles.textareaModal}
                 id="description"
                 value={data.description}
-                onChange={(e) =>
-                  setData({ ...data, description: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setData({ ...data, description: value });
+
+                  if (errors.description && value.trim().length >= 0) {
+                    setErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.description;
+                      return newErrors;
+                    });
+                  }
+                }}
               />
+              {errors.description && (
+                <p className={styles.error}>{errors.description}</p>
+              )}
             </label>
             <label htmlFor="data" className={styles.labelModal}>
               {" "}

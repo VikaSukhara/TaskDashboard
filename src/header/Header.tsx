@@ -5,6 +5,13 @@ import { useState } from "react";
 import Modal from "../Modal/Modal";
 import TaskCreation from "../TaskCreation/TaskCreation";
 
+import * as yup from "yup";
+
+const taskSchema = yup.object().shape({
+  title: yup.string().required("Title is required"),
+  description: yup.string().required("Description is required"),
+});
+
 type dataType = {
   title: string;
   description: string;
@@ -21,6 +28,8 @@ type HeaderProps = {
 export default function Header({ changeTheme, isDark }: HeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const [dataFromFrom, setDataFromFrom] = useState<dataType>({
     title: "",
     description: "",
@@ -44,10 +53,25 @@ export default function Header({ changeTheme, isDark }: HeaderProps) {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleSubmit = () => {
-    console.log("Submitted data:", dataFromFrom);
-    setIsModalOpen(false);
-    setStep(1);
+  const handleSubmit = async () => {
+    try {
+      await taskSchema.validate(dataFromFrom, { abortEarly: false });
+      console.log("Submitted data:", dataFromFrom);
+      setErrors({});
+      setIsModalOpen(false);
+      setStep(1);
+    } catch (err: any) {
+      console.log("Error caught:", err);
+      if (err.inner) {
+        const formattedErrors: Record<string, string> = {};
+        console.log("Preparing formattedErrors");
+        err.inner.forEach((error: any) => {
+          formattedErrors[error.path] = error.message;
+        });
+        setErrors(formattedErrors);
+        console.log("Validation errors:", formattedErrors);
+      }
+    }
   };
 
   return (
@@ -81,6 +105,8 @@ export default function Header({ changeTheme, isDark }: HeaderProps) {
             setData={setDataFromFrom}
             onSubmit={handleSubmit}
             onClose={toggleModal}
+            errors={errors}
+            setErrors={setErrors}
           />
         </Modal>
       )}
