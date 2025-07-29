@@ -23,9 +23,19 @@ type dataType = {
 type HeaderProps = {
   changeTheme: React.Dispatch<React.SetStateAction<boolean>>;
   isDark: boolean;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
 };
 
-export default function Header({ changeTheme, isDark }: HeaderProps) {
+export default function Header({
+  changeTheme,
+  isDark,
+  isSidebarOpen,
+  setIsSidebarOpen,
+  className = "",
+}: HeaderProps) {
+  console.log("className", className)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -75,7 +85,7 @@ export default function Header({ changeTheme, isDark }: HeaderProps) {
   };
 
   return (
-    <div className={styles.headerWrapper}>
+    <div className={className}>
       <h1 className={styles.headerTitle}>Task Dashboard</h1>
       <div className={styles.btnNavWrapper}>
         {" "}
@@ -85,7 +95,10 @@ export default function Header({ changeTheme, isDark }: HeaderProps) {
         >
           {isDark ? <Sun className={styles.sunIcon} /> : <Moon />}
         </button>
-        <button className={styles.btnTheme}>
+        <button
+          className={styles.btnTheme}
+          onClick={() => setIsSidebarOpen((prev) => !prev)}
+        >
           <Bell className={styles.icon} />
         </button>
         <select className={styles.select} name="" id="">
@@ -96,6 +109,7 @@ export default function Header({ changeTheme, isDark }: HeaderProps) {
           Create New Task
         </button>
       </div>
+
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={toggleModal} width="512px">
           <TaskCreation
