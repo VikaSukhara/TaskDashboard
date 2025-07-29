@@ -1,4 +1,3 @@
-
 .modalTitle {
   font-size: 24px;
   font-weight: 700;
@@ -183,13 +182,19 @@
   outline: none;
 }
 
+.error {
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+}
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: none;
 
-:global(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);  /* Інвертує кольори, => робить іконку календаря білою */
-}
+  :global(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Інвертує кольори, => робить іконку календаря білою */
+  }
   -webkit-filter: invert(1);
   cursor: pointer;
 }
