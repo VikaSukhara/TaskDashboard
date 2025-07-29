@@ -46,7 +46,6 @@ export default function Modal({
           {" "}
           <Plus style={{ transform: "rotate(45deg)" }} />
         </button>
-        It's modal
         {children}
       </div>
     </div>,

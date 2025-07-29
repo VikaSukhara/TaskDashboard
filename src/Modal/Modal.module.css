@@ -13,7 +13,7 @@
 
 .content {
   background: white;
-  padding: 2rem;
+  padding: 24px;
   border-radius: 8px;
   max-width: 90vw;
   max-height: 90vh;
@@ -43,3 +43,4 @@
 :global(.dark) .btnCross:hover {
   color: #e5e7eb;
 }
+

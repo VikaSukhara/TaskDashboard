@@ -22,7 +22,9 @@ html {
 *,
 *::before,
 *::after {
-  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .dark {
@@ -72,6 +74,15 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+input,
+textarea,
+select {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  font-family: inherit;
 }
 
 @media (prefers-color-scheme: light) {
