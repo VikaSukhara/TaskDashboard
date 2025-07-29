@@ -1,0 +1,83 @@
+.columnWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 370px;
+  padding: 16px;
+  border-radius: 8px;
+  flex: 1;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  background-color: #eff6ff;
+}
+
+.todo {
+  background-color: #eff6ff;
+}
+.inProgress {
+  background-color: #fefce8;
+}
+.done {
+  background-color: #f0fdf4;
+}
+
+:global(.dark) .todo {
+  background-color: rgb(26, 44, 94);
+}
+:global(.dark) .inProgress {
+  background-color: rgb(88, 42, 16);
+}
+:global(.dark) .done {
+  background-color: rgb(8, 71, 55);
+}
+
+.columnTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1d4ed8;
+  border-bottom: 1px solid #d1d5db;
+  padding-bottom: 8px;
+}
+
+:global(.dark) .columnTitle {
+  border-bottom-color: #4b5563;
+}
+
+.todoTitle {
+  color: #1d4ed8;
+}
+
+.inProgressTitle {
+  color: #b45309;
+}
+
+.doneTitle {
+  color: #15803d;
+}
+
+:global(.dark) .todoTitle {
+  color: #93c5fd;
+}
+
+:global(.dark) .inProgressTitle {
+  color: #facc15;
+}
+
+:global(.dark) .doneTitle {
+  color: #86efac;
+}
+
+.taskWrapper {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

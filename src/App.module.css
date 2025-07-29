@@ -8,6 +8,8 @@
   transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
   margin-left: 0;
   width: 100%;
+  margin-top: 64px;
+  padding: 16px;
 }
 
 .mainWithSidebar {
@@ -33,9 +35,13 @@
   justify-content: space-between;
   transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
   z-index: 10;
-  height: 4rem;
+  height: 64px;
   display: flex;
   justify-content: space-between;
+}
+
+:global(.dark) .headerWrapper {
+  background-color: #1f2937;
 }
 
 .headerWrapper.shifted {

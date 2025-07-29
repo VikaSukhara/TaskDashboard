@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Header from "./header/Header";
+import TaskContainers from "./TaskContainers/TaskContainers";
 import styles from "./App.module.css";
 
 function App() {
@@ -22,20 +23,21 @@ function App() {
 
   return (
     <div className={styles.appWrapper}>
+      <Header
+        changeTheme={setIsDark}
+        isDark={isDark}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+        className={`${styles.headerWrapper} ${
+          isSidebarOpen ? styles.shifted : ""
+        }`}
+      />
       <main
         className={`${styles.main} ${
           isSidebarOpen ? styles.mainWithSidebar : ""
         }`}
       >
-        <Header
-          changeTheme={setIsDark}
-          isDark={isDark}
-          isSidebarOpen={isSidebarOpen}
-          setIsSidebarOpen={setIsSidebarOpen}
-          className={`${styles.headerWrapper} ${
-            isSidebarOpen ? styles.shifted : ""
-          }`}
-        />
+        <TaskContainers />
       </main>
       <aside
         className={`${styles.sidebar} ${
