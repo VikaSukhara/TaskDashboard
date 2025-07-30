@@ -104,3 +104,34 @@
 :global(.dark) .sidebarTitle {
   color: #9ca3af;
 }
+
+.notificationsList {
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+  background-color: #f9fafb;
+  list-style: none;
+}
+
+:global(.dark) .notificationsList {
+  background-color: #374151;
+}
+
+.notificationsTitle {
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+:global(.dark) .notificationsTitle {
+  color: #e5e7eb;
+}
+
+.notificationsData {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+:global(.dark) .notificationsData {
+  color: #9ca3af;
+}
