@@ -10,9 +10,10 @@ export type taskType = {
   title: string;
   description: string;
   date: string;
-  priority: "medium" | "large" | "high";
+  priority: "Medium" | "Large" | "High";
   assigned: string;
-  status: "toDo" | "inProgress" | "done";
+  status: "To Do" | "In Progress" | "Done";
+  createdAt: string;
 };
 
 function App() {
@@ -58,7 +59,7 @@ function App() {
           isSidebarOpen ? styles.mainWithSidebar : ""
         }`}
       >
-        <TaskContainers tasks={tasks} setTasks={setTasks}/>
+        <TaskContainers tasks={tasks} setTasks={setTasks} />
       </main>
       <aside
         className={`${styles.sidebar} ${
