@@ -75,9 +75,51 @@
   color: #86efac;
 }
 
-.taskWrapper {
+.containerWrapper {
   min-height: 100px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.taskWrapper {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.75rem;
+  border-left-width: 4px;
+  border-left-color: #3b82f6;
+  display: flex;
+  align-items: center;
+  transition-property: box-shadow;
+  transition-duration: 200ms;
+}
+
+:global(.dark) .taskWrapper {
+  background-color: #374151;
+}
+
+.taskContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.taskTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+:global(.dark) .taskTitle {
+  color: #ffffff;
+}
+
+.taskParagraph {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+:global(.dark) .taskParagraph {
+  color: #d1d5db;
 }
