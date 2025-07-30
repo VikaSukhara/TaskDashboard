@@ -75,9 +75,23 @@
   color: #86efac;
 }
 
-.taskWrapper {
+.containerWrapper {
   min-height: 100px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.taskWrapper {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.75rem;
+  border-left-width: 4px;
+  border-left-color: #3b82f6;
+  display: flex;
+  align-items: center;
+  transition-property: box-shadow;
+  transition-duration: 200ms;
 }

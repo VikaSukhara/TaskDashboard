@@ -1,17 +1,12 @@
 import { useState } from "react";
 import styles from "./TaskCreation.module.css";
+import { taskType } from "../App";
 
-type dataType = {
-  title: string;
-  description: string;
-  date: string;
-  priority: "medium" | "large" | "high";
-  assigned: string;
-};
+
 
 type Props = {
-  data: dataType;
-  setData: React.Dispatch<React.SetStateAction<dataType>>;
+  data: taskType;
+  setData: React.Dispatch<React.SetStateAction<taskType>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   onSubmit: () => void;
   onClose: () => void;

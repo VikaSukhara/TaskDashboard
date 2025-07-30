@@ -6,19 +6,13 @@ import Modal from "../Modal/Modal";
 import TaskCreation from "../TaskCreation/TaskCreation";
 
 import * as yup from "yup";
+import { taskType } from "../App";
 
 const taskSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
 });
 
-type dataType = {
-  title: string;
-  description: string;
-  date: string;
-  priority: "medium" | "large" | "high";
-  assigned: string;
-};
 
 type HeaderProps = {
   changeTheme: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,6 +20,7 @@ type HeaderProps = {
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
+  addTask: (task: taskType) => void;
 };
 
 export default function Header({
@@ -34,18 +29,19 @@ export default function Header({
   isSidebarOpen,
   setIsSidebarOpen,
   className = "",
+  addTask,
 }: HeaderProps) {
-  console.log("className", className)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const [dataFromFrom, setDataFromFrom] = useState<dataType>({
-    title: "",
+  const [dataFromFrom, setDataFromFrom] = useState<taskType>({
+    title: "",  
     description: "",
     date: "",
     priority: "medium",
     assigned: "",
+    status: "toDo",
   });
 
   const toggleModal = () => {
@@ -57,6 +53,7 @@ export default function Header({
         date: "",
         priority: "medium",
         assigned: "",
+        status: "toDo",
       });
     }
 
@@ -67,6 +64,10 @@ export default function Header({
     try {
       await taskSchema.validate(dataFromFrom, { abortEarly: false });
       console.log("Submitted data:", dataFromFrom);
+      addTask({
+        ...dataFromFrom,
+      });
+
       setErrors({});
       setIsModalOpen(false);
       setStep(1);

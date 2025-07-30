@@ -4,6 +4,15 @@ import Header from "./header/Header";
 import TaskContainers from "./TaskContainers/TaskContainers";
 import styles from "./App.module.css";
 
+export type taskType = {
+  title: string;
+  description: string;
+  date: string;
+  priority: "medium" | "large" | "high";
+  assigned: string;
+  status: "toDo" | "inProgress" | "done";
+};
+
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => {
@@ -11,6 +20,15 @@ function App() {
     return theme === "dark" ? true : false;
   });
 
+  const [tasks, setTasks] = useState<taskType[]>([]);
+
+  const addTask = (newTask: taskType) => {
+    console.log("addTask");
+    console.log("addTask in", tasks);
+    setTasks([...tasks, newTask]);
+  };
+
+  console.log("addTask out", tasks);
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");
@@ -31,13 +49,14 @@ function App() {
         className={`${styles.headerWrapper} ${
           isSidebarOpen ? styles.shifted : ""
         }`}
+        addTask={addTask}
       />
       <main
         className={`${styles.main} ${
           isSidebarOpen ? styles.mainWithSidebar : ""
         }`}
       >
-        <TaskContainers />
+        <TaskContainers tasks={tasks} />
       </main>
       <aside
         className={`${styles.sidebar} ${
