@@ -1,8 +1,7 @@
 import { useState } from "react";
 import styles from "./TaskCreation.module.css";
 import { taskType } from "../App";
-
-
+import { useTranslation } from "react-i18next";
 
 type Props = {
   data: taskType;
@@ -25,7 +24,7 @@ export default function TaskCreation({
   errors,
   setErrors,
 }: Props) {
-  console.log("errors", errors);
+  const { t } = useTranslation();
 
   const validateStepOne = () => {
     const newErrors: Record<string, string> = {};
@@ -49,7 +48,7 @@ export default function TaskCreation({
 
   return (
     <div style={{ padding: "24px" }}>
-      <h2 className={styles.modalTitle}>Create New Task</h2>
+      <h2 className={styles.modalTitle}>{t("createNewTask")}</h2>
       <div className={styles.numbersWrapper}>
         <div
           className={`${styles.number} ${1 <= step ? styles.numberActive : ""}`}
@@ -68,7 +67,7 @@ export default function TaskCreation({
             {" "}
             <label htmlFor="task-title" className={styles.labelModal}>
               {" "}
-              Title
+              {t("title")}
               <input
                 type="text"
                 className={styles.inputModal}
@@ -94,7 +93,7 @@ export default function TaskCreation({
                 type="button"
                 onClick={handleNext}
               >
-                Next
+                {t("next")}
               </button>
             </div>
           </div>
@@ -103,7 +102,7 @@ export default function TaskCreation({
         {step === 2 && (
           <div>
             <label htmlFor="description" className={styles.labelModal}>
-              Description
+              {t("description")}
               <textarea
                 className={styles.textareaModal}
                 id="description"
@@ -127,7 +126,7 @@ export default function TaskCreation({
             </label>
             <label htmlFor="data" className={styles.labelModal}>
               {" "}
-              Due Date
+              {t("dueDate")}
               <input
                 type="date"
                 className={styles.inputModal}
@@ -137,7 +136,7 @@ export default function TaskCreation({
             </label>
             <label htmlFor="priority" className={styles.labelModal}>
               {" "}
-              Priority{" "}
+              {t("priority")}
               <select
                 name=""
                 id="priority"
@@ -150,14 +149,14 @@ export default function TaskCreation({
                   })
                 }
               >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
+                <option value="low"> {t("low")}</option>
+                <option value="medium">{t("medium")}</option>
+                <option value="high">{t("high")}</option>
               </select>
             </label>
             <label htmlFor="" className={styles.labelModal}>
               {" "}
-              Assigned To
+              {t("assignedTo")}
               <input
                 type="text"
                 className={styles.inputModal}
@@ -171,14 +170,14 @@ export default function TaskCreation({
                 className={styles["btn-gray"]}
                 onClick={() => setStep((prev) => prev - 1)}
               >
-                Previous
+                {t("previous")}
               </button>
               <button
                 type="button"
                 className={styles["btn-gradient"]}
                 onClick={onSubmit}
               >
-                Submit
+                {t("submit")}
               </button>
             </div>
           </div>

@@ -10,6 +10,7 @@ import styles from "./TaskContainers.module.css";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
 import DetailsAboutTask from "../DetailsAboutTask/DetailsAboutTask";
+import { useTranslation } from "react-i18next";
 
 type TaskContainersProps = {
   tasks: taskType[];
@@ -20,6 +21,7 @@ export default function TaskContainers({
   tasks,
   setTasks,
 }: TaskContainersProps) {
+  const { t } = useTranslation();
   const statuses = ["toDo", "inProgress", "done"] as const;
   const statusMap = {
     toDo: "To Do",
@@ -92,61 +94,65 @@ export default function TaskContainers({
     // Слухає події перетягування. Викдикається, коли перетягнула і відпустила картку
     <DragDropContext onDragEnd={onDragEnd}>
       <div className={styles.columnWrapper}>
-        {statuses.map((status) => (
-          <Droppable droppableId={status} key={status}>
-            {(provided) => (
-              <div className={`${styles.column} ${styles[status]}`}>
-                <h3
-                  className={`${styles.columnTitle} ${
-                    styles[`${status}Title`]
-                  }`}
-                >
-                  {status === "toDo"
-                    ? "To Do"
-                    : status === "inProgress"
-                    ? "In Progress"
-                    : "Done"}
-                </h3>
+        {statuses.map((status) => {
+          const count = tasks.filter(
+            (task) => task.status === statusMap[status]
+          ).length;
+          return (
+            <Droppable droppableId={status} key={status}>
+              {(provided) => (
+                <div className={`${styles.column} ${styles[status]}`}>
+                  <h3
+                    className={`${styles.columnTitle} ${
+                      styles[`${status}Title`]
+                    }`}
+                    title={t(status)}
+                  >
+                    {t(status)} ({count})
+                  </h3>
 
-                <ul
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={styles.containerWrapper}
-                >
-                  {tasks
-                    .filter((task) => task.status === statusMap[status])
-                    .map((task, index) => (
-                      <Draggable
-                        draggableId={task.id.toString()}
-                        index={index}
-                        key={task.id}
-                      >
-                        {(provided) => (
-                          <li
-                            onClick={() => openTaskModal(task.id.toString())}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className={`${styles.taskWrapper} ${
-                              cssClassMap[task.status] || ""
-                            }`}
-                          >
-                            <div className={styles.taskContainer}>
-                              <h4 className={styles.taskTitle}>{task.title}</h4>
-                              <p className={styles.taskParagraph}>
-                                {task.description}
-                              </p>
-                            </div>
-                          </li>
-                        )}
-                      </Draggable>
-                    ))}
-                  {provided.placeholder}
-                </ul>
-              </div>
-            )}
-          </Droppable>
-        ))}
+                  <ul
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={styles.containerWrapper}
+                  >
+                    {tasks
+                      .filter((task) => task.status === statusMap[status])
+                      .map((task, index) => (
+                        <Draggable
+                          draggableId={task.id.toString()}
+                          index={index}
+                          key={task.id}
+                        >
+                          {(provided) => (
+                            <li
+                              onClick={() => openTaskModal(task.id.toString())}
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`${styles.taskWrapper} ${
+                                cssClassMap[task.status] || ""
+                              }`}
+                            >
+                              <div className={styles.taskContainer}>
+                                <h4 className={styles.taskTitle}>
+                                  {task.title}
+                                </h4>
+                                <p className={styles.taskParagraph}>
+                                  {task.description}
+                                </p>
+                              </div>
+                            </li>
+                          )}
+                        </Draggable>
+                      ))}
+                    {provided.placeholder}
+                  </ul>
+                </div>
+              )}
+            </Droppable>
+          );
+        })}
       </div>
       <Modal isOpen={isSelectedTaskOpen} onClose={closeTaskModal} width="512px">
         {selectedTask ? (

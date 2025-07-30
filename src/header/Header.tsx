@@ -8,6 +8,9 @@ import TaskCreation from "../TaskCreation/TaskCreation";
 import * as yup from "yup";
 import { taskType } from "../App";
 import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
+import i18n from "../i18n";
+
 
 const taskSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -49,6 +52,11 @@ export default function Header({
     status: "To Do",
     createdAt: new Date().toISOString(),
   });
+
+  const { t } = useTranslation();
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value);
+  };
 
   const toggleModal = () => {
     if (!isModalOpen) {
@@ -96,7 +104,7 @@ export default function Header({
 
   return (
     <div className={className}>
-      <h1 className={styles.headerTitle}>Task Dashboard</h1>
+      <h1 className={styles.headerTitle}>{t("taskDashboard")}</h1>
       <div className={styles.btnNavWrapper}>
         {" "}
         <button
@@ -112,12 +120,16 @@ export default function Header({
           <Bell className={styles.icon} />
           {hasUnread && <span className={styles.redDot} />}
         </button>
-        <select className={styles.select} name="" id="">
-          <option>English</option>
-          <option>Ukraine</option>
+        <select
+          className={styles.select}
+          value={i18n.language}
+          onChange={handleLanguageChange}
+        >
+          <option value="en">English</option>
+          <option value="uk">Українська</option>
         </select>
         <button className={styles.btnTask} onClick={toggleModal}>
-          Create New Task
+          {t("createNewTask")}
         </button>
       </div>
 
