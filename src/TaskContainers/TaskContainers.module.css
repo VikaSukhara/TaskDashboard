@@ -18,17 +18,17 @@
   background-color: #eff6ff;
 }
 
-.todo {
-  background-color: #eff6ff;
+.toDo {
+  background-color: rgb(220, 232, 247);
 }
 .inProgress {
-  background-color: #fefce8;
+  background-color: rgb(255, 252, 222);
 }
 .done {
-  background-color: #f0fdf4;
+  background-color: rgb(222, 250, 230);
 }
 
-:global(.dark) .todo {
+:global(.dark) .toDo {
   background-color: rgb(26, 44, 94);
 }
 :global(.dark) .inProgress {
@@ -44,14 +44,17 @@
   margin-bottom: 1rem;
   color: #1d4ed8;
   border-bottom: 1px solid #d1d5db;
-  padding-bottom: 8px;
+  /* padding-bottom: 8px; */
+
+  flex-shrink: 0;
+  margin-bottom: 8px;
 }
 
 :global(.dark) .columnTitle {
   border-bottom-color: #4b5563;
 }
 
-.todoTitle {
+.toDoTitle {
   color: #1d4ed8;
 }
 
@@ -63,7 +66,7 @@
   color: #15803d;
 }
 
-:global(.dark) .todoTitle {
+:global(.dark) .toDoTitle {
   color: #93c5fd;
 }
 
@@ -80,6 +83,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  flex-grow: 1;
+  min-height: 100px;
+  padding-top: 4px;
 }
 
 .taskWrapper {
@@ -98,6 +105,30 @@
 
 :global(.dark) .taskWrapper {
   background-color: #374151;
+}
+
+.taskWrapper.toDo {
+  border-left: 5px solid #1d4ed8;
+}
+
+.taskWrapper.inProgress {
+  border-left: 5px solid #b45309;
+}
+
+.taskWrapper.done {
+  border-left: 5px solid #15803d;
+}
+
+:global(.dark) .taskWrapper.toDo {
+  border-left: 5px solid #93c5fd;
+}
+
+:global(.dark) .taskWrapper.inProgress {
+  border-left: 5px solid #facc15;
+}
+
+:global(.dark) .taskWrapper.done {
+  border-left: 5px solid #86efac;
 }
 
 .taskContainer {

@@ -146,7 +146,7 @@ export default function TaskCreation({
                 onChange={(e) =>
                   setData({
                     ...data,
-                    priority: e.target.value as "medium" | "large" | "high",
+                    priority: e.target.value as "Medium" | "Large" | "High",
                   })
                 }
               >

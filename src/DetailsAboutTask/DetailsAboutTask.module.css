@@ -1,0 +1,55 @@
+.container {
+  padding: 24px;
+}
+
+.card {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+:global(.dark) .card {
+  color: #ffffff;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+:global(.dark) .title {
+  color: #e5e7eb;
+}
+
+.description {
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+:global(.dark) .description {
+  color: #d1d5db;
+}
+
+.text {
+  font-weight: 500;
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 4px;
+}
+
+:global(.dark) .text {
+  color: #d1d5db;
+}
+
+.span {
+  font-weight: 600;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+:global(.dark) .span {
+  color: #9ca3af;
+}

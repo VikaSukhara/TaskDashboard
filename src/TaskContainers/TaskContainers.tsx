@@ -7,6 +7,9 @@ import {
 
 import { taskType } from "../App";
 import styles from "./TaskContainers.module.css";
+import { useState } from "react";
+import Modal from "../Modal/Modal";
+import DetailsAboutTask from "../DetailsAboutTask/DetailsAboutTask";
 
 type TaskContainersProps = {
   tasks: taskType[];
@@ -18,9 +21,35 @@ export default function TaskContainers({
   setTasks,
 }: TaskContainersProps) {
   const statuses = ["toDo", "inProgress", "done"] as const;
+  const statusMap = {
+    toDo: "To Do",
+    inProgress: "In Progress",
+    done: "Done",
+  } as const;
+
+  const cssClassMap = {
+    "To Do": styles.toDo,
+    "In Progress": styles.inProgress,
+    Done: styles.done,
+  };
+
+  const [isSelectedTaskOpen, setIsSelectedTaskOpen] = useState<boolean>(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const selectedTask = tasks.find((t) => t.id.toString() === selectedTaskId);
+
+  const openTaskModal = (id: string) => {
+    setSelectedTaskId(id);
+    setIsSelectedTaskOpen(true);
+  };
+
+  const closeTaskModal = () => {
+    setIsSelectedTaskOpen(false);
+    setSelectedTaskId(null);
+  };
 
   // викликаю тоді, коли перетягнула якусь картку
   const onDragEnd = (result: DropResult) => {
+    console.log("Drag ended:", result);
     // source - звідки беру задачу
     // destination - куди перетягую задачу
     const { destination, source, draggableId } = result;
@@ -44,10 +73,15 @@ export default function TaskContainers({
     updatedTasks.splice(destination.index, 0, {
       // цю задачу яку перетягую, вставляю в updatedTasks але з новим статусом
       ...draggedTask,
-      status: destination.droppableId as taskType["status"],
+      status: statusMap[destination.droppableId as keyof typeof statusMap],
     });
     setTasks(updatedTasks);
   };
+
+  console.log(
+    "Tasks with statuses:",
+    tasks.map((t) => ({ id: t.id, status: t.status }))
+  );
 
   return (
     // Слухає події перетягування. Викдикається, коли перетягнула і відпустила картку
@@ -55,14 +89,8 @@ export default function TaskContainers({
       <div className={styles.columnWrapper}>
         {statuses.map((status) => (
           <Droppable droppableId={status} key={status}>
-            {(
-              provided // Це внутрішній функціональний компонент
-            ) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={`${styles.column} ${styles[status]}`}
-              >
+            {(provided) => (
+              <div className={`${styles.column} ${styles[status]}`}>
                 <h3
                   className={`${styles.columnTitle} ${
                     styles[`${status}Title`]
@@ -74,9 +102,14 @@ export default function TaskContainers({
                     ? "In Progress"
                     : "Done"}
                 </h3>
-                <ul className={styles.containerWrapper}>
+
+                <ul
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={styles.containerWrapper}
+                >
                   {tasks
-                    .filter((task) => task.status === status)
+                    .filter((task) => task.status === statusMap[status])
                     .map((task, index) => (
                       <Draggable
                         draggableId={task.id.toString()}
@@ -85,14 +118,19 @@ export default function TaskContainers({
                       >
                         {(provided) => (
                           <li
+                            onClick={() => openTaskModal(task.id.toString())}
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className={styles.taskWrapper}
+                            className={`${styles.taskWrapper} ${
+                              cssClassMap[task.status] || ""
+                            }`}
                           >
                             <div className={styles.taskContainer}>
                               <h4 className={styles.taskTitle}>{task.title}</h4>
-                              <p className={styles.taskParagraph}>{task.description}</p>
+                              <p className={styles.taskParagraph}>
+                                {task.description}
+                              </p>
                             </div>
                           </li>
                         )}
@@ -105,6 +143,9 @@ export default function TaskContainers({
           </Droppable>
         ))}
       </div>
+      <Modal isOpen={isSelectedTaskOpen} onClose={closeTaskModal} width="512px">
+        {selectedTask ? <DetailsAboutTask task={selectedTask} /> : null}
+      </Modal>
     </DragDropContext>
   );
 }

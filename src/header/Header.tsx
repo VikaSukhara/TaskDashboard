@@ -40,9 +40,10 @@ export default function Header({
     title: "",
     description: "",
     date: "",
-    priority: "medium",
+    priority: "Medium",
     assigned: "",
-    status: "toDo",
+    status: "To Do",
+    createdAt: new Date().toISOString(),
   });
 
   const toggleModal = () => {
@@ -53,9 +54,10 @@ export default function Header({
         title: "",
         description: "",
         date: "",
-        priority: "medium",
+        priority: "Medium",
         assigned: "",
-        status: "toDo",
+        status: "To Do",
+        createdAt: new Date().toISOString(),
       });
     }
 
