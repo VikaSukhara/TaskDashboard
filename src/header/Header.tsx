@@ -7,12 +7,12 @@ import TaskCreation from "../TaskCreation/TaskCreation";
 
 import * as yup from "yup";
 import { taskType } from "../App";
+import { v4 as uuidv4 } from "uuid";
 
 const taskSchema = yup.object().shape({
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
 });
-
 
 type HeaderProps = {
   changeTheme: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,7 +36,8 @@ export default function Header({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [dataFromFrom, setDataFromFrom] = useState<taskType>({
-    title: "",  
+    id: uuidv4(),
+    title: "",
     description: "",
     date: "",
     priority: "medium",
@@ -48,6 +49,7 @@ export default function Header({
     if (!isModalOpen) {
       setStep(1);
       setDataFromFrom({
+        id: uuidv4(),
         title: "",
         description: "",
         date: "",

@@ -3,8 +3,10 @@ import "./App.css";
 import Header from "./header/Header";
 import TaskContainers from "./TaskContainers/TaskContainers";
 import styles from "./App.module.css";
+import { v4 as uuidv4 } from "uuid";
 
 export type taskType = {
+  id: string;
   title: string;
   description: string;
   date: string;
@@ -56,7 +58,7 @@ function App() {
           isSidebarOpen ? styles.mainWithSidebar : ""
         }`}
       >
-        <TaskContainers tasks={tasks} />
+        <TaskContainers tasks={tasks} setTasks={setTasks}/>
       </main>
       <aside
         className={`${styles.sidebar} ${
