@@ -21,6 +21,8 @@ type HeaderProps = {
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   className?: string;
   addTask: (task: taskType) => void;
+  addNotification: (message: string) => void;
+  hasUnread: boolean;
 };
 
 export default function Header({
@@ -30,6 +32,8 @@ export default function Header({
   setIsSidebarOpen,
   className = "",
   addTask,
+  addNotification,
+  hasUnread,
 }: HeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
@@ -71,6 +75,7 @@ export default function Header({
       addTask({
         ...dataFromFrom,
       });
+      addNotification(`${dataFromFrom.title}`);
 
       setErrors({});
       setIsModalOpen(false);
@@ -105,6 +110,7 @@ export default function Header({
           onClick={() => setIsSidebarOpen((prev) => !prev)}
         >
           <Bell className={styles.icon} />
+          {hasUnread && <span className={styles.redDot} />}
         </button>
         <select className={styles.select} name="" id="">
           <option>English</option>
