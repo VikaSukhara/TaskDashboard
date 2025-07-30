@@ -6,7 +6,7 @@ import styles from "./App.module.css";
 import { v4 as uuidv4 } from "uuid";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
-
+import { useTranslation } from "react-i18next";
 export type taskType = {
   id: string;
   title: string;
@@ -37,7 +37,7 @@ function App() {
   });
 
   const [hasUnread, setHasUnread] = useState(false);
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (isSidebarOpen) {
       setHasUnread(false);
@@ -74,12 +74,12 @@ function App() {
       <>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
-            New Notification:
+            {t("newNotificatio")}
           </h5>
 
           <div>
             <p style={{ fontSize: "16px", fontWeight: "400" }}>
-              Task created successfully! "{message}"
+              {t("success")} "{message}"
             </p>
           </div>
         </div>
@@ -133,7 +133,7 @@ function App() {
       >
         <div className={styles.sidebarTitleWrapper}>
           {" "}
-          <h3 className={styles.sidebarTitle}>Notifications</h3>
+          <h3 className={styles.sidebarTitle}> {t("notifications")}</h3>
         </div>
 
         {notifications ? (
@@ -147,7 +147,7 @@ function App() {
             ))}
           </ul>
         ) : (
-          <p className={styles.sidebarPar}>No notifications.</p>
+          <p className={styles.sidebarPar}>{t("noNotifications")}.</p>
         )}
       </aside>
       <Toaster position="top-right" />

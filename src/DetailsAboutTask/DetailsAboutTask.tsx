@@ -8,8 +8,10 @@ type Props = {
 
 import { Trash } from "lucide-react";
 import Modal from "../Modal/Modal";
+import { useTranslation } from "react-i18next";
 
 export default function DetailsAboutTask({ task, onDelete }: Props) {
+  const { t } = useTranslation();
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
     useState<boolean>(false);
 
@@ -27,41 +29,42 @@ export default function DetailsAboutTask({ task, onDelete }: Props) {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.card}>Task Details</h2>
+      <h2 className={styles.card}>{t("taskDetails")}</h2>
       <h3 className={styles.title}>{task.title}</h3>
       <p className={styles.description}>
         {" "}
-        <span className={styles.span}>Description: </span> {task.description}
+        <span className={styles.span}>{t("description")}: </span>{" "}
+        {task.description}
       </p>
 
       {task.date && (
         <p className={styles.text}>
-          <span className={styles.span}>Due Date:</span> {task.date}
+          <span className={styles.span}>{t("dueDate")}:</span> {task.date}
         </p>
       )}
 
       <p className={styles.text}>
         {" "}
-        <span className={styles.span}>Priority: </span>
+        <span className={styles.span}>{t("priority")}: </span>
         {task.priority}
       </p>
       {task.assigned && (
         <p className={styles.text}>
           {" "}
-          <span className={styles.span}>Assigned to:</span>
+          <span className={styles.span}>{t("assignedTo")}:</span>
           {task.assigned}
         </p>
       )}
 
       <p className={styles.text}>
         {" "}
-        <span className={styles.span}>Status:</span> {task.status}
+        <span className={styles.span}>{t("status")}:</span> {task.status}
       </p>
 
       {task.createdAt && (
         <p className={styles.text}>
           {" "}
-          <span className={styles.span}>Created at:</span>{" "}
+          <span className={styles.span}>{t("createdAt")}:</span>{" "}
           {formatDate(new Date(task.createdAt))}
         </p>
       )}
@@ -79,7 +82,7 @@ export default function DetailsAboutTask({ task, onDelete }: Props) {
           onClose={() => setIsDeleteConfirmOpen(false)}
         >
           <div className={styles.modalContainer}>
-            <h3>Ви хочете видалити завдання?</h3>
+            <h3>{t("deleteConfirmation")}</h3>
             <div className={styles.btnConfirmationWrapper}>
               <button
                 className={styles.modalBtn}
@@ -88,13 +91,13 @@ export default function DetailsAboutTask({ task, onDelete }: Props) {
                   setIsDeleteConfirmOpen(false);
                 }}
               >
-                Так
+                {t("yes")}
               </button>
               <button
                 className={styles.modalBtn}
                 onClick={() => setIsDeleteConfirmOpen(false)}
               >
-                Ні
+                {t("no")}
               </button>
             </div>
           </div>
