@@ -47,6 +47,11 @@ export default function TaskContainers({
     setSelectedTaskId(null);
   };
 
+  const deleteTask = (id: string) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+    console.log("delete");
+  };
+
   // викликаю тоді, коли перетягнула якусь картку
   const onDragEnd = (result: DropResult) => {
     console.log("Drag ended:", result);
@@ -144,7 +149,15 @@ export default function TaskContainers({
         ))}
       </div>
       <Modal isOpen={isSelectedTaskOpen} onClose={closeTaskModal} width="512px">
-        {selectedTask ? <DetailsAboutTask task={selectedTask} /> : null}
+        {selectedTask ? (
+          <DetailsAboutTask
+            onDelete={(id) => {
+              deleteTask(id);
+              closeTaskModal();
+            }}
+            task={selectedTask}
+          />
+        ) : null}
       </Modal>
     </DragDropContext>
   );

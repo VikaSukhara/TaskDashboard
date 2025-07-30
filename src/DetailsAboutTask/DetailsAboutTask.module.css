@@ -1,5 +1,6 @@
 .container {
   padding: 24px;
+  position: relative;
 }
 
 .card {
@@ -52,4 +53,86 @@
 
 :global(.dark) .span {
   color: #9ca3af;
+}
+
+.btnTrash {
+  background: none;
+  margin: 0 auto;
+
+  position: absolute;
+  right: 0;
+
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 9999px;
+  transition: background-color 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+:global(.dark) .btnTrash:hover {
+  background-color: #374151;
+}
+
+.btnTrash:hover {
+  background-color: #e5e7eb;
+}
+
+.btnTrash:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.icon {
+  color: black;
+  transition: color 0.5s ease;
+}
+
+:global(.dark) .icon {
+  color: white;
+}
+
+.modalContainer {
+  padding: 16px;
+}
+.btnConfirmationWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.modalBtn {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.modalBtn:hover {
+  background-color: rgb(212, 213, 214);
+}
+
+.btnTrash:focus {
+  outline: none;
+}
+
+.modalBtn :focus {
+  outline: none;
+}
+
+:global(.dark) .modalBtn {
+  background-color: white;
+}
+
+:global(.dark) .modalBtn:hover {
+  background-color: rgb(189, 189, 189);
 }
