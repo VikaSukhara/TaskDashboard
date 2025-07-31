@@ -91,11 +91,6 @@ export default function TaskContainers({
     setTasks(updatedTasks);
   };
 
-  console.log(
-    "Tasks with statuses:",
-    tasks.map((t) => ({ id: t.id, status: t.status }))
-  );
-
   return (
     // Слухає події перетягування. Викдикається, коли перетягнула і відпустила картку
     <DragDropContext onDragEnd={onDragEnd}>
