@@ -121,6 +121,8 @@
   line-height: 1.25;
   font-weight: 500;
   font-size: 16px;
+
+  overflow-wrap: break-word;
 }
 
 .btnWrapper {
@@ -191,10 +193,10 @@
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: none;
-
-  :global(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1); /* Інвертує кольори, => робить іконку календаря білою */
-  }
-  -webkit-filter: invert(1);
   cursor: pointer;
 }
+:global(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Інвертує кольори, => робить іконку календаря білою */
+}
+-webkit-filter: invert(1);
+cursor: pointer;

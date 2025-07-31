@@ -7,10 +7,11 @@ import {
 
 import { taskType } from "../App";
 import styles from "./TaskContainers.module.css";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal/Modal";
 import DetailsAboutTask from "../DetailsAboutTask/DetailsAboutTask";
 import { useTranslation } from "react-i18next";
+import TaskCreation from "../TaskCreation/TaskCreation";
 
 type TaskContainersProps = {
   tasks: taskType[];
@@ -39,6 +40,12 @@ export default function TaskContainers({
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const selectedTask = tasks.find((t) => t.id.toString() === selectedTaskId);
 
+  const [editingTask, setEditingTask] = useState<taskType | null>(null);
+  const [isEditingModalOpen, setIsEditingModalOpen] = useState(false);
+
+  const [step, setStep] = useState(1);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const openTaskModal = (id: string) => {
     setSelectedTaskId(id);
     setIsSelectedTaskOpen(true);
@@ -51,7 +58,6 @@ export default function TaskContainers({
 
   const deleteTask = (id: string) => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
-    console.log("delete");
   };
 
   // викликаю тоді, коли перетягнула якусь картку
@@ -102,14 +108,16 @@ export default function TaskContainers({
             <Droppable droppableId={status} key={status}>
               {(provided) => (
                 <div className={`${styles.column} ${styles[status]}`}>
-                  <h3
-                    className={`${styles.columnTitle} ${
-                      styles[`${status}Title`]
-                    }`}
-                    title={t(status)}
-                  >
-                    {t(status)} ({count})
-                  </h3>
+                  <div className={styles.titleWrapper}>
+                    <h3
+                      className={`${styles.columnTitle} ${
+                        styles[`${status}Title`]
+                      }`}
+                      title={t(status)}
+                    >
+                      {t(status)} ({count})
+                    </h3>
+                  </div>
 
                   <ul
                     ref={provided.innerRef}
@@ -162,8 +170,62 @@ export default function TaskContainers({
               closeTaskModal();
             }}
             task={selectedTask}
+            onEdit={(task) => {
+              setEditingTask(task);
+              setIsEditingModalOpen(true);
+              closeTaskModal();
+            }}
           />
         ) : null}
+      </Modal>
+      <Modal
+        isOpen={isEditingModalOpen}
+        onClose={() => {
+          setIsEditingModalOpen(false);
+          setEditingTask(null);
+          setStep(1);
+          setErrors({});
+        }}
+        width="512px"
+      >
+        {editingTask && (
+          <TaskCreation
+            data={editingTask}
+            step={step}
+            setStep={setStep}
+            setData={(updatedTask) => {
+              if (typeof updatedTask === "function") {
+                setEditingTask((prev) => {
+                  if (prev === null) return null;
+                  return (updatedTask as (prevState: taskType) => taskType)(
+                    prev
+                  );
+                });
+              } else {
+                setEditingTask(updatedTask);
+              }
+            }}
+            errors={errors}
+            setErrors={setErrors}
+            onSubmit={() => {
+              setTasks((prev) =>
+                prev.map((task) =>
+                  task.id === editingTask.id ? editingTask : task
+                )
+              );
+              setIsEditingModalOpen(false);
+              setEditingTask(null);
+              setStep(1);
+              setErrors({});
+            }}
+            onClose={() => {
+              setIsEditingModalOpen(false);
+              setEditingTask(null);
+              setStep(1);
+              setErrors({});
+            }}
+          />
+        )}
       </Modal>
     </DragDropContext>
   );

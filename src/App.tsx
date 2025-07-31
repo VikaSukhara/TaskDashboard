@@ -4,9 +4,11 @@ import Header from "./header/Header";
 import TaskContainers from "./TaskContainers/TaskContainers";
 import styles from "./App.module.css";
 import { v4 as uuidv4 } from "uuid";
-import { Toaster } from "react-hot-toast";
+import { Toast, Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { Plus } from "lucide-react";
+
 export type taskType = {
   id: string;
   title: string;
@@ -71,19 +73,43 @@ function App() {
     setNotifications((prev) => [newNotification, ...prev]);
     setHasUnread(true);
     toast.success(
-      <>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
-            {t("newNotificatio")}
-          </h5>
+      (toastObj) => (
+        <>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <h5 style={{ fontSize: "18px", fontWeight: "600" }}>
+              {t("newNotificatio")}
+            </h5>
 
-          <div>
-            <p style={{ fontSize: "16px", fontWeight: "400" }}>
-              {t("success")} "{message}"
-            </p>
+            <div>
+              <p style={{ fontSize: "16px", fontWeight: "400" }}>
+                {t("success")} "{message}"
+              </p>
+            </div>
           </div>
-        </div>
-      </>,
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toast.dismiss(toastObj.id);
+              console.log("click");
+            }}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#fff",
+              fontSize: "18px",
+              cursor: "pointer",
+              lineHeight: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transform: "rotate(45deg)",
+            }}
+          >
+            <Plus size={20} width={20} />
+          </button>
+        </>
+      ),
       {
         style: {
           background: "#3b82f6",

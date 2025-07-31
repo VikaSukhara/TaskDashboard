@@ -16,6 +16,7 @@
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   background-color: #eff6ff;
+  position: relative;
 }
 
 .toDo {
@@ -38,16 +39,33 @@
   background-color: rgb(8, 71, 55);
 }
 
+.titleWrapper {
+  display: flex;
+  padding: 8px;
+  border-bottom: 1px solid #d1d5db;
+  position: relative;
+  overflow: visible;
+  align-items: center;
+}
+
 .columnTitle {
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 1rem;
   color: #1d4ed8;
-  border-bottom: 1px solid #d1d5db;
-  /* padding-bottom: 8px; */
 
   flex-shrink: 0;
   margin-bottom: 8px;
+}
+
+.ellipsis {
+  width: 30px;
+  height: 30px;
+  color: #4b5563;
+}
+
+:global(.dark) .ellipsis {
+  color: #d1d5db;
 }
 
 :global(.dark) .columnTitle {
