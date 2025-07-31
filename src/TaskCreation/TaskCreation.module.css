@@ -198,5 +198,3 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 :global(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1); /* Інвертує кольори, => робить іконку календаря білою */
 }
--webkit-filter: invert(1);
-cursor: pointer;
