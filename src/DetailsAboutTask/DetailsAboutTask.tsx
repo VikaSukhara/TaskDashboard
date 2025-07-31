@@ -4,13 +4,14 @@ import styles from "./DetailsAboutTask.module.css";
 type Props = {
   task: taskType;
   onDelete: (id: string) => void;
+  onEdit: (task: taskType) => void;
 };
 
-import { Trash } from "lucide-react";
+import { Trash, Pencil } from "lucide-react";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
 
-export default function DetailsAboutTask({ task, onDelete }: Props) {
+export default function DetailsAboutTask({ task, onDelete, onEdit }: Props) {
   const { t } = useTranslation();
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
     useState<boolean>(false);
@@ -68,6 +69,10 @@ export default function DetailsAboutTask({ task, onDelete }: Props) {
           {formatDate(new Date(task.createdAt))}
         </p>
       )}
+
+      <button className={styles.btnPencil} onClick={() => onEdit(task)}>
+        <Pencil className={styles.icon} />
+      </button>
 
       <button
         className={styles.btnTrash}

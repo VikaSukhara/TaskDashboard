@@ -81,8 +81,13 @@
   background-color: #374151;
 }
 
-.btnTrash:hover {
+.btnTrash:hover,
+.btnPencil:hover {
   background-color: #e5e7eb;
+}
+
+:global(.dark) .btnPencil:hover {
+  background-color: #374151;
 }
 
 .btnTrash:focus {
@@ -97,6 +102,24 @@
 
 :global(.dark) .icon {
   color: white;
+}
+.btnPencil {
+  background: none;
+  margin: 0 auto;
+
+  position: absolute;
+  right: 40px;
+
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 9999px;
+  transition: background-color 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
 }
 
 .modalContainer {
@@ -118,10 +141,11 @@
   align-items: center;
   justify-content: center;
   outline: none;
+  background-color: rgb(212, 213, 214);
 }
 
 .modalBtn:hover {
-  background-color: rgb(212, 213, 214);
+  background-color: rgb(159, 159, 160);
 }
 
 .btnTrash:focus {
