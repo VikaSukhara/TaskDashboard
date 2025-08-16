@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { taskType } from "../App";
-import styles from "./DetailsAboutTask.module.css";
+import { TaskType } from "../App";
+import styles from "./DetailsAboutTask.module.scss";
 type Props = {
-  task: taskType;
+  task: TaskType;
   onDelete: (id: string) => void;
-  onEdit: (task: taskType) => void;
+  onEdit: (task: TaskType) => void;
 };
 
 import { Trash, Pencil } from "lucide-react";
 import Modal from "../Modal/Modal";
 import { useTranslation } from "react-i18next";
 
-export default function DetailsAboutTask({ task, onDelete, onEdit }: Props) {
+const DetailsAboutTask: React.FC<Props> = ({ task, onDelete, onEdit }) => {
   const { t } = useTranslation();
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
     useState<boolean>(false);
@@ -33,8 +33,7 @@ export default function DetailsAboutTask({ task, onDelete, onEdit }: Props) {
       <h2 className={styles.card}>{t("taskDetails")}</h2>
       <h3 className={styles.title}>{task.title}</h3>
       <p className={styles.description}>
-        {" "}
-        <span className={styles.span}>{t("description")}: </span>{" "}
+        <span className={styles.span}>{t("description")}: </span>
         {task.description}
       </p>
 
@@ -45,27 +44,23 @@ export default function DetailsAboutTask({ task, onDelete, onEdit }: Props) {
       )}
 
       <p className={styles.text}>
-        {" "}
         <span className={styles.span}>{t("priority")}: </span>
         {task.priority}
       </p>
       {task.assigned && (
         <p className={styles.text}>
-          {" "}
           <span className={styles.span}>{t("assignedTo")}:</span>
           {task.assigned}
         </p>
       )}
 
       <p className={styles.text}>
-        {" "}
         <span className={styles.span}>{t("status")}:</span> {task.status}
       </p>
 
       {task.createdAt && (
         <p className={styles.text}>
-          {" "}
-          <span className={styles.span}>{t("createdAt")}:</span>{" "}
+          <span className={styles.span}>{t("createdAt")}:</span>
           {formatDate(new Date(task.createdAt))}
         </p>
       )}
@@ -110,4 +105,6 @@ export default function DetailsAboutTask({ task, onDelete, onEdit }: Props) {
       )}
     </div>
   );
-}
+};
+
+export default DetailsAboutTask;

@@ -1,35 +1,99 @@
-import { useState } from "react";
-import styles from "./TaskCreation.module.css";
-import { taskType } from "../App";
+import styles from "./TaskCreation.module.scss";
+import { TaskType } from "../App";
 import { useTranslation } from "react-i18next";
+import cn from "classnames";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+export enum Priority {
+  Low = "Low",
+  Medium = "Medium",
+  High = "High",
+}
+
+const schema = yup.object({
+  title: yup.string().trim().required("Title is required"),
+  description: yup.string().trim().required("Description is required"),
+  date: yup
+    .string()
+    .default(undefined)
+    .test("valid-date", "Invalid date", (value) => {
+      if (!value) return true;
+      const selectedDate = new Date(value);
+      return !isNaN(selectedDate.getTime());
+    })
+    .test("no-past-date", "Date cannot be in the past", (value) => {
+      if (!value) return true;
+      const selectedDate = new Date(value);
+      return selectedDate >= today;
+    })
+    .test("valid-year", "Year must be between 2025 and 2030", (value) => {
+      if (!value) return true;
+      const selectedDate = new Date(value);
+      const year = selectedDate.getFullYear();
+      return year >= 2025 && year <= 2030;
+    }),
+  priority: yup.mixed<Priority>().oneOf(Object.values(Priority)).required(),
+  assigned: yup.string().trim().default(""),
+});
+
+// Тип форми виводиться зі схеми.
+type FormValues = yup.InferType<typeof schema> & { date: string | undefined };
 
 type Props = {
-  data: taskType;
-  setData: React.Dispatch<React.SetStateAction<taskType>>;
+  data: TaskType;
+  setData: React.Dispatch<React.SetStateAction<TaskType>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   onSubmit: () => void;
   onClose: () => void;
   step: number;
-  errors: Record<string, string>;
+  error: Record<string, string>;
   setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 };
 
-export default function TaskCreation({
+const TaskCreation: React.FC<Props> = ({
   data,
   step,
   setData,
   onSubmit,
   onClose,
   setStep,
-  errors,
+  error,
   setErrors,
-}: Props) {
+}: Props) => {
   const { t } = useTranslation();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      title: data.title || "",
+      description: data.description || "",
+      date: data.date ?? undefined,
+      priority: data.priority || "low",
+      assigned: data.assigned || "",
+    },
+    resolver: yupResolver(schema) as any,
+  });
+
+  useEffect(() => {
+    const subscription = watch((values) => setData(values as TaskType));
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   const validateStepOne = () => {
     const newErrors: Record<string, string> = {};
     if (!data.title.trim()) {
-      newErrors.title = "Title is required";
+      newErrors.title = t("errors.titleRequired");
     }
 
     return newErrors;
@@ -51,12 +115,12 @@ export default function TaskCreation({
       <h2 className={styles.modalTitle}>{t("createNewTask")}</h2>
       <div className={styles.numbersWrapper}>
         <div
-          className={`${styles.number} ${1 <= step ? styles.numberActive : ""}`}
+          className={cn(styles.number, { [styles.numberActive]: 1 <= step })}
         >
           1
         </div>
         <div
-          className={`${styles.number} ${2 <= step ? styles.numberActive : ""}`}
+          className={cn(styles.number, { [styles.numberActive]: 2 <= step })}
         >
           2
         </div>
@@ -64,28 +128,17 @@ export default function TaskCreation({
       <form action="" className={styles.formModal}>
         {step === 1 && (
           <div>
-            {" "}
             <label htmlFor="task-title" className={styles.labelModal}>
-              {" "}
               {t("title")}
               <input
+                id="task-title"
                 type="text"
                 className={styles.inputModal}
-                value={data.title}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setData({ ...data, title: value });
-
-                  if (errors.title && value.trim().length >= 0) {
-                    setErrors((prev) => {
-                      const newErrors = { ...prev };
-                      delete newErrors.title;
-                      return newErrors;
-                    });
-                  }
-                }}
+                {...register("title", { required: t("errors.titleRequired") })}
               />
-              {errors.title && <p className={styles.error}>{errors.title}</p>}
+              {errors.title && (
+                <p className={styles.error}>{errors.title.message}</p>
+              )}
             </label>
             <div className={styles.btNextModal}>
               <button
@@ -106,64 +159,56 @@ export default function TaskCreation({
               <textarea
                 className={styles.textareaModal}
                 id="description"
-                value={data.description}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setData({ ...data, description: value });
-
-                  if (errors.description && value.trim().length >= 0) {
-                    setErrors((prev) => {
-                      const newErrors = { ...prev };
-                      delete newErrors.description;
-                      return newErrors;
-                    });
-                  }
-                }}
+                {...register("description", {
+                  required: t("errors.descriptionRequired"),
+                })}
               />
               {errors.description && (
-                <p className={styles.error}>{errors.description}</p>
+                <p className={styles.error}>{error.description}</p>
               )}
             </label>
+            {errors.description && (
+              <p className={styles.error}>{errors.description.message}</p>
+            )}
             <label htmlFor="data" className={styles.labelModal}>
-              {" "}
               {t("dueDate")}
               <input
                 type="date"
                 className={styles.inputModal}
-                value={data.date}
-                onChange={(e) => setData({ ...data, date: e.target.value })}
+                {...register("date")}
+                min={today.toISOString().split("T")[0]}
               />
             </label>
+            {errors.date && (
+              <p className={styles.error}>{errors.date.message}</p>
+            )}
             <label htmlFor="priority" className={styles.labelModal}>
-              {" "}
               {t("priority")}
               <select
-                name=""
                 id="priority"
                 className={styles.inputModal}
-                value={data.priority}
-                onChange={(e) =>
-                  setData({
-                    ...data,
-                    priority: e.target.value as "Medium" | "Large" | "High",
-                  })
-                }
+                {...register("priority")}
               >
-                <option value="low"> {t("low")}</option>
-                <option value="medium">{t("medium")}</option>
-                <option value="high">{t("high")}</option>
+                <option value={Priority.Low}>{t("low")}</option>
+                <option value={Priority.Medium}>{t("medium")}</option>
+
+                <option value={Priority.High}>{t("high")}</option>
               </select>
             </label>
+            {errors.priority && (
+              <p className={styles.error}>{errors.priority.message}</p>
+            )}
             <label htmlFor="" className={styles.labelModal}>
-              {" "}
               {t("assignedTo")}
               <input
                 type="text"
                 className={styles.inputModal}
-                value={data.assigned}
-                onChange={(e) => setData({ ...data, assigned: e.target.value })}
+                {...register("assigned")}
               />
             </label>
+            {errors.assigned && (
+              <p className={styles.error}>{errors.assigned.message}</p>
+            )}
             <div className={styles.btnWrapper}>
               <button
                 type="button"
@@ -175,7 +220,7 @@ export default function TaskCreation({
               <button
                 type="button"
                 className={styles["btn-gradient"]}
-                onClick={onSubmit}
+                onClick={handleSubmit(onSubmit)}
               >
                 {t("submit")}
               </button>
@@ -185,4 +230,6 @@ export default function TaskCreation({
       </form>
     </div>
   );
-}
+};
+
+export default TaskCreation;

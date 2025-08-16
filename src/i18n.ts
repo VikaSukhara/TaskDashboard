@@ -31,6 +31,11 @@ const resources = {
       toDo: "To Do",
       inProgress: "In Progress",
       done: "Done",
+      taskSaved: "Your changes are saved",
+      errors: {
+        titleRequired: "Title is required",
+        descriptionRequired: "Description is required",
+      },
     },
   },
   uk: {
@@ -61,6 +66,11 @@ const resources = {
       toDo: "До виконання",
       inProgress: "В процесі",
       done: "Завершено",
+      taskSaved: "Ваші зміни збережено",
+      errors: {
+        titleRequired: "Це поле обов'язкове",
+        descriptionRequired: "Це поле обов'язкове",
+      },
     },
   },
 };

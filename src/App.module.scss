@@ -13,11 +13,7 @@
 }
 
 .mainWithSidebar {
-  width: calc(100% - 320px);
-}
-
-.mainWithSidebar {
-  width: calc(100% - 320px);
+  margin-left: -320px;
 }
 
 .headerWrapper {

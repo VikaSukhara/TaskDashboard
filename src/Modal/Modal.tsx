@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 
-import styles from "./Modal.module.css";
+import styles from "./Modal.module.scss";
 import { Plus } from "lucide-react";
 import { useEffect } from "react";
 
@@ -12,13 +12,13 @@ type ModalProps = {
   height?: string;
 };
 
-export default function Modal({
+const Modal: React.FC<ModalProps> = ({
   children,
   isOpen,
   onClose,
   width,
   height,
-}: ModalProps) {
+}) => {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -43,7 +43,6 @@ export default function Modal({
         style={{ width, height }}
       >
         <button className={styles.btnCross} onClick={onClose}>
-          {" "}
           <Plus style={{ transform: "rotate(45deg)" }} />
         </button>
         {children}
@@ -51,4 +50,5 @@ export default function Modal({
     </div>,
     document.getElementById("modal")!
   );
-}
+};
+export default Modal;

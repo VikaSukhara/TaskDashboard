@@ -4,30 +4,40 @@ import {
   Draggable, // елементи, які можна перетягувати.
   DropResult, //  тип, який описує результат події onDragEnd
 } from "@hello-pangea/dnd";
-
-import { taskType } from "../App";
-import styles from "./TaskContainers.module.css";
+import cn from "classnames";
+import { TaskType } from "../App";
+import styles from "./TaskContainers.module.scss";
 import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal/Modal";
 import DetailsAboutTask from "../DetailsAboutTask/DetailsAboutTask";
 import { useTranslation } from "react-i18next";
 import TaskCreation from "../TaskCreation/TaskCreation";
+import toast from "react-hot-toast";
 
 type TaskContainersProps = {
-  tasks: taskType[];
-  setTasks: React.Dispatch<React.SetStateAction<taskType[]>>;
+  tasks: TaskType[];
+  setTasks: React.Dispatch<React.SetStateAction<TaskType[]>>;
+  isSidebarOpen: boolean;
 };
 
-export default function TaskContainers({
+enum Status {
+  ToDo = "To Do",
+  InProgress = "In Progress",
+  Done = "Done",
+}
+
+const TaskContainers: React.FC<TaskContainersProps> = ({
   tasks,
   setTasks,
-}: TaskContainersProps) {
+  isSidebarOpen,
+}) => {
   const { t } = useTranslation();
   const statuses = ["toDo", "inProgress", "done"] as const;
+
   const statusMap = {
-    toDo: "To Do",
-    inProgress: "In Progress",
-    done: "Done",
+    toDo: Status.ToDo,
+    inProgress: Status.InProgress,
+    done: Status.Done,
   } as const;
 
   const cssClassMap = {
@@ -38,9 +48,14 @@ export default function TaskContainers({
 
   const [isSelectedTaskOpen, setIsSelectedTaskOpen] = useState<boolean>(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
-  const selectedTask = tasks.find((t) => t.id.toString() === selectedTaskId);
+  const selectedTask = tasks.find(
+    (t) =>
+      t.id != null &&
+      selectedTaskId != null &&
+      t.id.toString() === selectedTaskId
+  );
 
-  const [editingTask, setEditingTask] = useState<taskType | null>(null);
+  const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const [isEditingModalOpen, setIsEditingModalOpen] = useState(false);
 
   const [step, setStep] = useState(1);
@@ -91,6 +106,21 @@ export default function TaskContainers({
     setTasks(updatedTasks);
   };
 
+  const handleEditSubmit = () => {
+    if (!editingTask) return;
+
+    setTasks((prev) =>
+      prev.map((task) => (task.id === editingTask.id ? editingTask : task))
+    );
+
+    setIsEditingModalOpen(false);
+    setEditingTask(null);
+    setStep(1);
+    setErrors({});
+
+    toast.success(t("taskSaved"));
+  };
+
   return (
     // Слухає події перетягування. Викдикається, коли перетягнула і відпустила картку
     <DragDropContext onDragEnd={onDragEnd}>
@@ -102,12 +132,17 @@ export default function TaskContainers({
           return (
             <Droppable droppableId={status} key={status}>
               {(provided) => (
-                <div className={`${styles.column} ${styles[status]}`}>
+                <div
+                  className={cn(styles.column, styles[status], {
+                    [styles.columnWithSidebar]: isSidebarOpen,
+                  })}
+                >
                   <div className={styles.titleWrapper}>
                     <h3
-                      className={`${styles.columnTitle} ${
+                      className={cn(
+                        styles.columnTitle,
                         styles[`${status}Title`]
-                      }`}
+                      )}
                       title={t(status)}
                     >
                       {t(status)} ({count})
@@ -133,9 +168,10 @@ export default function TaskContainers({
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className={`${styles.taskWrapper} ${
-                                cssClassMap[task.status] || ""
-                              }`}
+                              className={cn(
+                                styles.taskWrapper,
+                                cssClassMap[task.status]
+                              )}
                             >
                               <div className={styles.taskContainer}>
                                 <h4 className={styles.taskTitle}>
@@ -166,9 +202,9 @@ export default function TaskContainers({
             }}
             task={selectedTask}
             onEdit={(task) => {
-              setEditingTask(task);
-              setIsEditingModalOpen(true);
-              closeTaskModal();
+              setEditingTask(task); // встановлюємо таску, яку редагуємо
+              setIsEditingModalOpen(true); // відкриваємо модалку редагування
+              closeTaskModal(); // закриваємо деталі
             }}
           />
         ) : null}
@@ -192,7 +228,7 @@ export default function TaskContainers({
               if (typeof updatedTask === "function") {
                 setEditingTask((prev) => {
                   if (prev === null) return null;
-                  return (updatedTask as (prevState: taskType) => taskType)(
+                  return (updatedTask as (prevState: TaskType) => TaskType)(
                     prev
                   );
                 });
@@ -200,19 +236,9 @@ export default function TaskContainers({
                 setEditingTask(updatedTask);
               }
             }}
-            errors={errors}
+            error={errors}
             setErrors={setErrors}
-            onSubmit={() => {
-              setTasks((prev) =>
-                prev.map((task) =>
-                  task.id === editingTask.id ? editingTask : task
-                )
-              );
-              setIsEditingModalOpen(false);
-              setEditingTask(null);
-              setStep(1);
-              setErrors({});
-            }}
+            onSubmit={handleEditSubmit}
             onClose={() => {
               setIsEditingModalOpen(false);
               setEditingTask(null);
@@ -224,4 +250,6 @@ export default function TaskContainers({
       </Modal>
     </DragDropContext>
   );
-}
+};
+
+export default TaskContainers;

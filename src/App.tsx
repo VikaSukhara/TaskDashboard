@@ -1,32 +1,45 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Header from "./header/Header";
+import Header from "./HeaderComponents/HeaderComponents";
 import TaskContainers from "./TaskContainers/TaskContainers";
-import styles from "./App.module.css";
+import styles from "./App.module.scss";
 import { v4 as uuidv4 } from "uuid";
 import { Toast, Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
+import cn from "classnames";
 
-export type taskType = {
+export enum Priority {
+  Low = "Low",
+  Medium = "Medium",
+  High = "High",
+}
+
+export enum Status {
+  ToDo = "To Do",
+  InProgress = "In Progress",
+  Done = "Done",
+}
+
+export type TaskType = {
   id: string;
   title: string;
   description: string;
   date: string;
-  priority: "Medium" | "Large" | "High";
+  priority: Priority;
   assigned: string;
-  status: "To Do" | "In Progress" | "Done";
+  status: Status;
   createdAt: string;
 };
 
-function App() {
+const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => {
     const theme = localStorage.getItem("theme");
     return theme === "dark" ? true : false;
   });
-  const [tasks, setTasks] = useState<taskType[]>(() => {
+  const [tasks, setTasks] = useState<TaskType[]>(() => {
     const saved = localStorage.getItem("tasks");
     return saved ? JSON.parse(saved) : [];
   });
@@ -125,7 +138,7 @@ function App() {
     );
   };
 
-  const addTask = (newTask: taskType) => {
+  const addTask = (newTask: TaskType) => {
     console.log("addTask");
     console.log("addTask in", tasks);
     setTasks([...tasks, newTask]);
@@ -136,29 +149,30 @@ function App() {
       <Header
         changeTheme={setIsDark}
         isDark={isDark}
-        isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
-        className={`${styles.headerWrapper} ${
-          isSidebarOpen ? styles.shifted : ""
-        }`}
+        className={cn(styles.headerWrapper, {
+          [styles.shifted]: isSidebarOpen,
+        })}
         addTask={addTask}
         addNotification={addNotification}
         hasUnread={hasUnread}
       />
       <main
-        className={`${styles.main} ${
-          isSidebarOpen ? styles.mainWithSidebar : ""
-        }`}
+        className={cn(styles.main, { [styles.mainWithSidebar]: isSidebarOpen })}
       >
-        <TaskContainers tasks={tasks} setTasks={setTasks} />
+        <TaskContainers
+          tasks={tasks}
+          setTasks={setTasks}
+          isSidebarOpen={isSidebarOpen}
+        />
       </main>
       <aside
-        className={`${styles.sidebar} ${
-          isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed
-        }`}
+        className={cn(styles.sidebar, {
+          [styles.sidebarOpen]: isSidebarOpen,
+          [styles.sidebarClosed]: !isSidebarOpen,
+        })}
       >
         <div className={styles.sidebarTitleWrapper}>
-          {" "}
           <h3 className={styles.sidebarTitle}> {t("notifications")}</h3>
         </div>
 
@@ -179,6 +193,6 @@ function App() {
       <Toaster position="top-right" />
     </div>
   );
-}
+};
 
 export default App;
