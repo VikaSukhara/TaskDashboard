@@ -76,9 +76,9 @@ const HeaderComponents: React.FC<HeaderProps> = ({
       title: "",
       description: "",
       date: "",
-      priority: "Medium" as Priority,
+      priority: Priority.Medium,
       assigned: "",
-      status: "To Do" as Status,
+      status: Status.ToDo,
       createdAt: new Date().toISOString(),
     };
     setStep(1);
@@ -95,9 +95,9 @@ const HeaderComponents: React.FC<HeaderProps> = ({
         title: "",
         description: "",
         date: "",
-        priority: "Medium" as Priority,
+        priority: Priority.Medium,
         assigned: "",
-        status: "To Do" as Status,
+        status: Status.ToDo,
         createdAt: new Date().toISOString(),
       };
       setStep(1);
@@ -110,36 +110,12 @@ const HeaderComponents: React.FC<HeaderProps> = ({
 
     setIsModalOpen(!isModalOpen);
   };
-
-  const handleSubmit = async () => {
-    console.log("handleSubmit викликаний");
-    const taskSchema = yup.object().shape({
-      title: yup.string().required(t("errors.titleRequired")),
-      description: yup.string().required(t("errors.descriptionRequired")),
-    });
-
-    try {
-      await taskSchema.validate(dataFromFrom, { abortEarly: false });
-      addTask({ ...dataFromFrom });
-      if (initialData && dataFromFrom.title !== initialData.title) {
-        console.log("є зміни"); // тепер точно спрацює
-        addNotification(`Заголовок змінено: "${dataFromFrom.title}"`);
-      } else {
-        addNotification(`${dataFromFrom.title}`);
-      }
-
-      setErrors({});
-      setIsModalOpen(false);
-      setStep(1);
-    } catch (err: any) {
-      if (err.inner) {
-        const formattedErrors: Record<string, string> = {};
-        err.inner.forEach((error: any) => {
-          formattedErrors[error.path] = error.message;
-        });
-        setErrors(formattedErrors);
-      }
-    }
+  const handleSubmit = (values: TaskType) => {
+    addTask(values);
+    addNotification(values.title || "New task created");
+    setIsModalOpen(false);
+    setStep(1);
+    setErrors({});
   };
 
   return (
