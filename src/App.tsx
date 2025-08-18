@@ -104,7 +104,6 @@ const App: React.FC = () => {
             onClick={(e) => {
               e.stopPropagation();
               toast.dismiss(toastObj.id);
-              console.log("click");
             }}
             style={{
               background: "transparent",
@@ -139,8 +138,6 @@ const App: React.FC = () => {
   };
 
   const addTask = (newTask: TaskType) => {
-    console.log("addTask");
-    console.log("addTask in", tasks);
     setTasks([...tasks, newTask]);
   };
 

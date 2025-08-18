@@ -77,7 +77,6 @@ const TaskContainers: React.FC<TaskContainersProps> = ({
 
   // викликаю тоді, коли перетягнула якусь картку
   const onDragEnd = (result: DropResult) => {
-    console.log("Drag ended:", result);
     // source - звідки беру задачу
     // destination - куди перетягую задачу
     const { destination, source, draggableId } = result;
@@ -91,13 +90,20 @@ const TaskContainers: React.FC<TaskContainersProps> = ({
     )
       return;
 
-    const draggedTask = tasks.find((t) => t.id.toString() === draggableId); //шукає ту задачу, яку перетягую
+    const draggedTask = tasks.find( 
+      (t) => t.id != null && t.id.toString() === draggableId
+    );
     if (!draggedTask) return;
 
+    // const updatedTasks = [...tasks].filter(
+    //   //копія всіх задач, але вже без тої яку перетягую
+    //   (t) => t.id.toString() !== draggableId
+    // );
+
     const updatedTasks = [...tasks].filter(
-      //копія всіх задач, але вже без тої яку перетягую
-      (t) => t.id.toString() !== draggableId
-    );
+  (t) => t.id != null && t.id.toString() !== draggableId
+);
+
     updatedTasks.splice(destination.index, 0, {
       // цю задачу яку перетягую, вставляю в updatedTasks але з новим статусом
       ...draggedTask,
@@ -120,7 +126,7 @@ const TaskContainers: React.FC<TaskContainersProps> = ({
 
     toast.success(t("taskSaved"));
   };
-
+ 
   return (
     // Слухає події перетягування. Викдикається, коли перетягнула і відпустила картку
     <DragDropContext onDragEnd={onDragEnd}>
@@ -158,7 +164,9 @@ const TaskContainers: React.FC<TaskContainersProps> = ({
                       .filter((task) => task.status === statusMap[status])
                       .map((task, index) => (
                         <Draggable
-                          draggableId={task.id.toString()}
+                          draggableId={
+                            task.id ? task.id.toString() : `temp-${index}`
+                          }
                           index={index}
                           key={task.id}
                         >

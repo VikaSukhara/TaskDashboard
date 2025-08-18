@@ -17,6 +17,12 @@ export enum Priority {
   High = "High",
 }
 
+export enum Status {
+  ToDo = "To Do",
+  InProgress = "In Progress",
+  Done = "Done",
+}
+
 const schema = yup.object({
   title: yup.string().trim().required("Title is required"),
   description: yup.string().trim().required("Description is required"),
@@ -50,7 +56,7 @@ type Props = {
   data: TaskType;
   setData: React.Dispatch<React.SetStateAction<TaskType>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  onSubmit: () => void;
+  onSubmit: (values: TaskType) => void;
   onClose: () => void;
   step: number;
   error: Record<string, string>;
@@ -68,7 +74,6 @@ const TaskCreation: React.FC<Props> = ({
   setErrors,
 }: Props) => {
   const { t } = useTranslation();
-
   const {
     register,
     handleSubmit,
@@ -86,7 +91,12 @@ const TaskCreation: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    const subscription = watch((values) => setData(values as TaskType));
+    const subscription = watch((values) =>
+      setData((prev) => ({
+        ...prev, // зберігаємо id, status, createdAt
+        ...values, // оновлюємо лише поля форми
+      }))
+    );
     return () => subscription.unsubscribe();
   }, [watch]);
 
@@ -218,9 +228,11 @@ const TaskCreation: React.FC<Props> = ({
                 {t("previous")}
               </button>
               <button
-                type="button"
+                type="submit"
                 className={styles["btn-gradient"]}
-                onClick={handleSubmit(onSubmit)}
+                onClick={handleSubmit((values) => {
+                  onSubmit(data);
+                })}
               >
                 {t("submit")}
               </button>
